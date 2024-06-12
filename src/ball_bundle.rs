@@ -52,3 +52,15 @@ pub fn spawn_ball(
         }
     ));
 }
+
+/// Move ball
+/// 
+/// 
+pub fn move_ball(
+    // Give me all positions that also contain a `Ball` component
+    mut ball: Query<&mut Position, With<Ball>>,
+) {
+    if let Ok(mut position) = ball.get_single_mut() {
+        position.0.x += 1.0
+    }
+}
