@@ -4,6 +4,7 @@ use bevy::prelude::*;
 
 pub mod ball_bundle;
 pub mod circle_collision;
+pub mod gutter;
 pub mod paddle;
 
 use ball_bundle::move_ball;

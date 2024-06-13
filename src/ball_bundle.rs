@@ -55,7 +55,7 @@ pub fn spawn_ball(
     // followed by an `insert`. They mean the same thing, 
     // letting us spawn many components on a new entity at once.
     commands.spawn((
-        BallBundle::new(1., 0.),
+        BallBundle::new(1., 1.),
         MaterialMesh2dBundle {
             mesh: mesh_handle.into(),
             material: material_handle,
