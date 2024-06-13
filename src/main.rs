@@ -3,11 +3,22 @@ use std::error::Error;
 use bevy::prelude::*;
 
 pub mod ball_bundle;
+pub mod circle_collision;
+pub mod paddle;
 
 use ball_bundle::move_ball;
 
 #[derive(Component)]
 pub struct Position(Vec2);
+
+// This component is a tuple type, we can access the Vec2 it holds
+// by using the position of the item in the tuple 
+// e.g. velocity.0 which would be a Vec2
+#[derive(Component)]
+pub struct Velocity(Vec2);
+
+#[derive(Component)]
+pub struct Shape(Vec2);
 
 /// Spawn camera
 /// 
@@ -41,13 +52,18 @@ fn project_positions(
 fn main() -> Result<(), Box<dyn Error>> {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_systems(Startup, (ball_bundle::spawn_ball, spawn_camera))
+        .add_systems(Startup, (
+            ball_bundle::spawn_ball,
+            spawn_camera,
+            paddle::spawn_paddles,
+        ))
         .add_systems(Update, (
             move_ball,
             // Add our projection system to run after
             // we move our ball so we are not reading
             // movement one frame behind
-            project_positions.after(move_ball)
+            project_positions.after(move_ball),
+            ball_bundle::handle_collisions.after(move_ball),
         ))
         .run();
     
