@@ -2,7 +2,9 @@ use bevy::prelude::*;
 
 use bevy::sprite::MaterialMesh2dBundle;
 
-use crate::{Position, Velocity, Shape};
+use crate::{gutter::GUTTER_HEIGHT, Position, Shape, Velocity};
+use crate::player::Player;
+use crate::ai::Ai;
 
 pub const PADDLE_SPEED: f32 = 1.;
 pub const PADDLE_WIDTH: f32 = 10.;
@@ -53,7 +55,7 @@ pub fn spawn_paddles(
         let mesh_handle = meshes.add(mesh);
         
         commands.spawn((
-            // Player,
+            Player,
             PaddleBundle::new(right_paddle_x, 0.),
             MaterialMesh2dBundle {
                 mesh: mesh_handle.clone().into(),
@@ -65,7 +67,7 @@ pub fn spawn_paddles(
         ));
         
         commands.spawn((
-            // Ai,
+            Ai,
             PaddleBundle::new(left_paddle_x, 0.),
             MaterialMesh2dBundle {
                 mesh: mesh_handle.into(),
@@ -75,5 +77,26 @@ pub fn spawn_paddles(
                 ..default()
             }
         ));
+    }
+}
+
+/// Move paddles
+/// 
+/// 
+pub fn move_paddles(
+    mut paddle: Query<(&mut Position, &Velocity), With<Paddle>>,
+    window: Query<&Window>,
+) {
+    if let Ok(window) = window.get_single() {
+        let window_height = window.resolution.height();
+        let max_y = window_height / 2. - GUTTER_HEIGHT - PADDLE_HEIGHT / 2.;
+        
+        for(mut position, velocity) in &mut paddle {
+            let new_position = position.0 + velocity.0 * PADDLE_SPEED;
+            
+            if new_position.y.abs() < max_y {
+                position.0 = new_position;
+            }
+        }
     }
 }

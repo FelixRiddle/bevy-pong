@@ -2,6 +2,7 @@ use std::error::Error;
 
 use bevy::prelude::*;
 
+pub mod ai;
 pub mod ball;
 pub mod circle_collision;
 pub mod gutter;
@@ -75,7 +76,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             detect_scoring,
             score::reset_ball.after(detect_scoring),
             score::update_score.after(detect_scoring),
-            player::move_paddles.after(handle_player_input),
+            paddle::move_paddles.after(handle_player_input),
             // Add our projection system to run after
             // we move our ball so we are not reading
             // movement one frame behind
