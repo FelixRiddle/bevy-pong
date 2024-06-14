@@ -5,10 +5,13 @@ use bevy::math::bounding::{
 use bevy::prelude::*;
 use bevy::sprite::MaterialMesh2dBundle;
 
-use crate::{circle_collision::{
+use crate::circle_collision::{
     self,
     Collision,
-}, Position, Velocity, Shape};
+};
+use crate::{
+    Position, Velocity, Shape
+};
 
 const BALL_SIZE: f32 = 5.;
 

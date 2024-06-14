@@ -2,12 +2,20 @@ use std::error::Error;
 
 use bevy::prelude::*;
 
-pub mod ball_bundle;
+pub mod ball;
 pub mod circle_collision;
 pub mod gutter;
 pub mod paddle;
+pub mod player;
+pub mod score;
 
-use ball_bundle::move_ball;
+use ball::move_ball;
+use score::{
+    detect_scoring,
+    Score,
+    Scored,
+};
+use player::handle_player_input;
 
 #[derive(Component)]
 pub struct Position(Vec2);
@@ -53,18 +61,26 @@ fn project_positions(
 fn main() -> Result<(), Box<dyn Error>> {
     App::new()
         .add_plugins(DefaultPlugins)
+        .init_resource::<Score>()
+        .add_event::<Scored>()
         .add_systems(Startup, (
-            ball_bundle::spawn_ball,
+            ball::spawn_ball,
             spawn_camera,
             paddle::spawn_paddles,
+            gutter::spawn_gutters,
         ))
         .add_systems(Update, (
             move_ball,
+            handle_player_input,
+            detect_scoring,
+            score::reset_ball.after(detect_scoring),
+            score::update_score.after(detect_scoring),
+            player::move_paddles.after(handle_player_input),
             // Add our projection system to run after
             // we move our ball so we are not reading
             // movement one frame behind
             project_positions.after(move_ball),
-            ball_bundle::handle_collisions.after(move_ball),
+            ball::handle_collisions.after(move_ball),
         ))
         .run();
     

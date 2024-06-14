@@ -76,19 +76,4 @@ pub fn spawn_paddles(
             }
         ));
     }
-    
-    // let mesh = Mesh::from(Rectangle::new(PADDLE_WIDTH, PADDLE_HEIGHT));
-    // let material = ColorMaterial::from(Color::rgb(0., 1., 0.));
-    
-    // let mesh_handle = meshes.add(mesh);
-    // let material_handle = materials.add(material);
-    
-    // commands.spawn((
-    //     PaddleBundle::new(20., -25.),
-    //     MaterialMesh2dBundle {
-    //         mesh: mesh_handle.into(),
-    //         material: material_handle,
-    //         ..default()
-    //     }
-    // ));
 }

@@ -6,7 +6,7 @@ use crate::{
     Position,
 };
 
-const GUTTER_HEIGHT: f32 = 20.;
+pub const GUTTER_HEIGHT: f32 = 20.;
 
 #[derive(Component)]
 pub struct Gutter;
