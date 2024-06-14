@@ -60,7 +60,7 @@ pub fn spawn_paddles(
             MaterialMesh2dBundle {
                 mesh: mesh_handle.clone().into(),
                 material: materials.add(
-                    ColorMaterial::from(Color::rgb(0., 0., 1.))
+                    ColorMaterial::from(Color::rgb(0., 1., 0.))
                 ),
                 ..default()
             }

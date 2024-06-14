@@ -75,6 +75,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .add_systems(Update, (
             move_ball,
             handle_player_input,
+            ai::move_ai,
             detect_scoring,
             scoreboard::update_scoreboard,
             score::reset_ball.after(detect_scoring),
