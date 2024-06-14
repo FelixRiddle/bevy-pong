@@ -9,6 +9,7 @@ pub mod gutter;
 pub mod paddle;
 pub mod player;
 pub mod score;
+pub mod scoreboard;
 
 use ball::move_ball;
 use score::{
@@ -69,11 +70,13 @@ fn main() -> Result<(), Box<dyn Error>> {
             spawn_camera,
             paddle::spawn_paddles,
             gutter::spawn_gutters,
+            scoreboard::spawn_scoreboard,
         ))
         .add_systems(Update, (
             move_ball,
             handle_player_input,
             detect_scoring,
+            scoreboard::update_scoreboard,
             score::reset_ball.after(detect_scoring),
             score::update_score.after(detect_scoring),
             paddle::move_paddles.after(handle_player_input),

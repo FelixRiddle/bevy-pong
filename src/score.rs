@@ -14,8 +14,8 @@ pub struct Scored(Scorer);
 
 #[derive(Resource, Default)]
 pub struct Score {
-    player: u32,
-    ai: u32,
+    pub player: u32,
+    pub ai: u32,
 }
 
 /// Detect scoring
