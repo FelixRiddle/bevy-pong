@@ -19,8 +19,8 @@ pub fn move_ai(
     if let Ok((
         mut velocity,
         position
-    )) = ai.get_single_mut() {
-        if let Ok(ball_position) = ball.get_single() {
+    )) = ai.single_mut() {
+        if let Ok(ball_position) = ball.single() {
             let a_to_b = ball_position.0 - position.0;
             velocity.0.y = a_to_b.y.signum();
         }

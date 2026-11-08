@@ -1,15 +1,15 @@
 use bevy::prelude::*;
 
-use crate::Velocity;
-use crate::Position;
 use crate::ball::Ball;
+use crate::Position;
+use crate::Velocity;
 
 pub enum Scorer {
     Ai,
-    Player
+    Player,
 }
 
-#[derive(Event)]
+#[derive(Message)]
 pub struct Scored(Scorer);
 
 #[derive(Resource, Default)]
@@ -19,34 +19,31 @@ pub struct Score {
 }
 
 /// Detect scoring
-/// 
-/// 
+///
+///
 pub fn detect_scoring(
     mut ball: Query<&mut Position, With<Ball>>,
     window: Query<&Window>,
-    mut events: EventWriter<Scored>,
+    mut events: MessageWriter<Scored>,
 ) {
-    if let Ok(window) = window.get_single() {
+    if let Ok(window) = window.single() {
         let window_width = window.resolution.width();
-        
-        if let Ok(ball) = ball.get_single_mut() {
+
+        if let Ok(ball) = ball.single_mut() {
             // Here we write our events using our event writer
             if ball.0.x > window_width / 2. {
-                events.send(Scored(Scorer::Ai));
+                events.write(Scored(Scorer::Ai));
             } else if ball.0.x < -window_width / 2. {
-                events.send(Scored(Scorer::Player));
+                events.write(Scored(Scorer::Player));
             }
         }
     }
 }
 
 /// Update score
-/// 
-/// 
-pub fn update_score(
-    mut score: ResMut<Score>,
-    mut events: EventReader<Scored>,
-) {
+///
+///
+pub fn update_score(mut score: ResMut<Score>, mut events: MessageReader<Scored>) {
     for event in events.read() {
         match event.0 {
             Scorer::Ai => {
@@ -57,22 +54,19 @@ pub fn update_score(
             }
         }
     }
-    
-    println!("Score: {} - {}", score.player, score.ai);
+
+    // println!("Score: {} - {}", score.player, score.ai);
 }
 
 /// Reset ball
-/// 
-/// 
+///
+///
 pub fn reset_ball(
     mut ball: Query<(&mut Position, &mut Velocity), With<Ball>>,
-    mut events: EventReader<Scored>,
+    mut events: MessageReader<Scored>,
 ) {
     for event in events.read() {
-        if let Ok((
-            mut position,
-            mut velocity,
-        )) = ball.get_single_mut() {
+        if let Ok((mut position, mut velocity)) = ball.single_mut() {
             match event.0 {
                 Scorer::Ai => {
                     position.0 = Vec2::new(0., 0.);

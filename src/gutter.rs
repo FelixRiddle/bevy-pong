@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy::sprite::MaterialMesh2dBundle;
 
 use crate::{
     Shape,
@@ -37,7 +36,7 @@ pub fn spawn_gutters(
     mut materials: ResMut<Assets<ColorMaterial>>,
     window: Query<&Window>,
  ) {
-    if let Ok(window) = window.get_single() {
+    if let Ok(window) = window.single() {
         let window_width = window.resolution.width();
         let window_height = window.resolution.height();
         
@@ -51,7 +50,7 @@ pub fn spawn_gutters(
         let bottom_gutter = GutterBundle::new(0., bottom_gutter_y, window_width);
         
         let mesh = Mesh::from(Rectangle::from_size(top_gutter.shape.0));
-        let material = ColorMaterial::from(Color::rgb(0., 0., 0.));
+        let material = ColorMaterial::from(Color::srgb(0., 0., 0.));
         
         // We can share these meshes between our gutters by cloning them
         let mesh_handle = meshes.add(mesh);
@@ -59,20 +58,14 @@ pub fn spawn_gutters(
         
         commands.spawn((
             top_gutter,
-            MaterialMesh2dBundle {
-                mesh: mesh_handle.clone().into(),
-                material: material_handle.clone(),
-                ..default()
-            }
+            Mesh2d(mesh_handle.clone()),
+            MeshMaterial2d(material_handle.clone()),
         ));
         
         commands.spawn((
             bottom_gutter,
-            MaterialMesh2dBundle {
-                mesh: mesh_handle.into(),
-                material: material_handle,
-                ..default()
-            }
+            Mesh2d(mesh_handle),
+            MeshMaterial2d(material_handle),
         ));
     }
 }
